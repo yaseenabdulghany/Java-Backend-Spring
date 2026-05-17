@@ -1,0 +1,77 @@
+The query:
+
+SELECT *
+FROM employees
+WHERE FIRST_NAME BETWEEN 'a' AND 'c';
+
+This condition means:
+
+FIRST_NAME >= 'a'
+AND FIRST_NAME <= 'c'
+
+So Oracle will search for rows where FIRST_NAME is alphabetically between lowercase a and lowercase c.
+
+The important point is that string comparison is usually case-sensitive.
+
+This means:
+
+'a' is different from 'A'
+
+So if the names in the employees table are written like this:
+
+Adam
+Bob
+Charles
+Steven
+
+they start with uppercase letters, not lowercase letters.
+
+Because your query uses lowercase:
+
+BETWEEN 'a' AND 'c'
+
+it may return:
+
+no rows selected
+
+because uppercase names like Adam or Bob are not between lowercase a and lowercase c.
+
+Also, BETWEEN 'a' AND 'c' does not mean “names starting with a, b, or c” exactly.
+
+It means the whole text value must be between 'a' and 'c'.
+
+For example:
+
+'a'   is included
+'b'   is included
+'c'   is included
+'car' is not included
+
+Why is car not included?
+
+Because car is greater than c.
+
+Oracle compares strings character by character.
+
+So the best query for names starting with A, B, or C is:
+
+SELECT *
+FROM employees
+WHERE UPPER(FIRST_NAME) >= 'A'
+AND UPPER(FIRST_NAME) < 'D';
+
+This means:
+
+Get all names starting from A up to before D
+
+So it includes names like:
+
+Adam
+Alexander
+Bob
+Bruce
+Charles
+Clara
+
+Finally:
+The original query will probably show no rows selected, especially if the names are stored with uppercase first letters, because it compares strings case-sensitively and 'a' is not the same as 'A'.
